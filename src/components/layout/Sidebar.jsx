@@ -14,7 +14,7 @@ import {
   LineChart,
   Settings,
   HelpCircle,
-  ChevronLeft,
+  X,
   LogOut,
   Sparkles,
 } from 'lucide-react'
@@ -34,7 +34,7 @@ const ICON_MAP = {
 
 export const Sidebar = () => {
   const sidebarOpen = useUIStore((state) => state.sidebarOpen)
-  const toggleSidebar = useUIStore((state) => state.toggleSidebar)
+  const closeSidebar = useUIStore((state) => state.closeSidebar)
   const user = useAuthStore((state) => state.user)
   const logout = useAuthStore((state) => state.logout)
 
@@ -44,7 +44,7 @@ export const Sidebar = () => {
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
-          onClick={toggleSidebar}
+          onClick={closeSidebar}
         />
       )}
 
@@ -56,31 +56,31 @@ export const Sidebar = () => {
           bg-surface-container-lowest border-r border-outline-variant/40
           flex flex-col
           transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-0 lg:overflow-hidden'}
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        {/* Header — Logo */}
+        {/* Header — Logo + Close Button */}
         <div className="h-20 px-6 flex items-center justify-between border-b border-outline-variant/30 shrink-0">
           <Logo size="md" />
+          
+          {/* ✅ Close Button (mobile-only, but always shows when sidebar open) */}
           <button
-            onClick={toggleSidebar}
-            className="lg:hidden p-2 rounded-lg hover:bg-surface-container text-on-surface-variant"
+            onClick={closeSidebar}
+            className="mobile-only p-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors items-center justify-center"
             aria-label="Close sidebar"
           >
-            <ChevronLeft size={20} />
+            <X size={22} />
           </button>
         </div>
 
         {/* Scrollable Nav */}
         <nav className="flex-1 overflow-y-auto sidebar-scroll px-4 py-6">
-          {/* Main Nav Label */}
           <div className="px-3 mb-3">
             <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
               Main Menu
             </span>
           </div>
 
-          {/* Main Links */}
           <ul className="space-y-1">
             {SIDEBAR_LINKS.map((link) => {
               const IconComponent = ICON_MAP[link.icon]
@@ -88,6 +88,9 @@ export const Sidebar = () => {
                 <li key={link.path}>
                   <NavLink
                     to={link.path}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) closeSidebar()
+                    }}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md transition-all group ${
                         isActive
@@ -110,17 +113,14 @@ export const Sidebar = () => {
             })}
           </ul>
 
-          {/* Spacer */}
           <div className="my-8 border-t border-outline-variant/30" />
 
-          {/* Bottom Nav Label */}
           <div className="px-3 mb-3">
             <span className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant/60">
               Account
             </span>
           </div>
 
-          {/* Bottom Links */}
           <ul className="space-y-1">
             {SIDEBAR_FOOTER_LINKS.map((link) => {
               const IconComponent = ICON_MAP[link.icon]
@@ -128,6 +128,9 @@ export const Sidebar = () => {
                 <li key={link.path}>
                   <NavLink
                     to={link.path}
+                    onClick={() => {
+                      if (window.innerWidth < 1024) closeSidebar()
+                    }}
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md transition-all ${
                         isActive
@@ -147,7 +150,6 @@ export const Sidebar = () => {
 
         {/* User Profile & Upgrade */}
         <div className="shrink-0 p-4 border-t border-outline-variant/30 bg-surface-container-low/50">
-          {/* Upgrade Card */}
           <div className="bg-gradient-to-br from-primary to-primary-container rounded-2xl p-4 mb-4 text-white relative overflow-hidden">
             <div className="absolute -top-6 -right-6 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
             <Sparkles size={18} className="fill-white text-white mb-2" />
@@ -159,7 +161,6 @@ export const Sidebar = () => {
             </button>
           </div>
 
-          {/* User Info */}
           {user && (
             <div className="flex items-center gap-3 p-2 rounded-xl">
               <img
