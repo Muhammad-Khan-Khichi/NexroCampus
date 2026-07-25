@@ -721,3 +721,41 @@ select {
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
+
+
+/* ============================================ */
+/* RESPONSIVE UTILITIES (Always Work) */
+/* ============================================ */
+
+/* Mobile-only (hidden on desktop ≥ 1024px) */
+.mobile-only {
+  display: inline-flex !important;
+}
+
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+/* Desktop-only (hidden on mobile) */
+.desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .desktop-only {
+    display: inline-flex !important;
+  }
+}
+
+/* Tablet+ hidden */
+.tablet-up-hidden {
+  display: inline-flex !important;
+}
+
+@media (min-width: 768px) {
+  .tablet-up-hidden {
+    display: none !important;
+  }
+}
